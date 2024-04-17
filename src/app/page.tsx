@@ -64,16 +64,16 @@ const Page = () => {
 
 
   const categories = ['all', ...new Set(data.map(item => item.category))];
-  const prices = ['all', 'under 100k', '100k - 500k', 'above 500k'];
+  const prices = ['all', 'under 1jt', '1jt - 2jt', 'above 2jt'];
   const availabilities = ['all', 'available', 'out of stock'];
   const sorts = ['name', 'price (lowest)', 'price (highest)', 'popularity'];
 
   let filteredData = data.filter(item => {
     const categoryCondition = selectedCategory === 'all' || item.category === selectedCategory;
     const priceCondition = selectedPrice === 'all' ||
-      (selectedPrice === 'under 100k' && item.price < 100000) ||
-      (selectedPrice === '100k - 500k' && item.price >= 100000 && item.price <= 500000) ||
-      (selectedPrice === 'above 500k' && item.price > 500000);
+      (selectedPrice === 'under 1jt' && item.price < 1000000) ||
+      (selectedPrice === '1jt - 2jt' && item.price >= 1000000 && item.price <= 2000000) ||
+      (selectedPrice === 'above 2jt' && item.price > 2000000);
     const availabilityCondition = selectedAvailability === 'all' ||
       (selectedAvailability === 'available' && item.availability > 0) ||
       (selectedAvailability === 'out of stock' && item.availability === 0);
