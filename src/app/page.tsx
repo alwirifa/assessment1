@@ -59,21 +59,21 @@ const Page = () => {
       sort: selectedSort
     };
     const href = `/?${new URLSearchParams(queryParams).toString()}`;
-    router.push(href, undefined, { shallow: true }); 
+    router.push(href, undefined, { shallow: true }); // Menghilangkan argumen kedua yang tidak diperlukan
   }, [selectedCategory, selectedPrice, selectedAvailability, selectedSort]);
 
 
   const categories = ['all', ...new Set(data.map(item => item.category))];
-  const prices = ['all', 'under 1jt', '1jt - 1.5jt', 'above 1.5jt'];
+  const prices = ['all', 'under 100k', '100k - 500k', 'above 500k'];
   const availabilities = ['all', 'available', 'out of stock'];
   const sorts = ['name', 'price (lowest)', 'price (highest)', 'popularity'];
 
   let filteredData = data.filter(item => {
     const categoryCondition = selectedCategory === 'all' || item.category === selectedCategory;
     const priceCondition = selectedPrice === 'all' ||
-      (selectedPrice === 'under 1jt' && item.price < 1000000) ||
-      (selectedPrice === '1jt - 1.5jt' && item.price >= 1000000 && item.price <= 1500000) ||
-      (selectedPrice === 'above 1.5jt' && item.price > 1500000);
+      (selectedPrice === 'under 100k' && item.price < 100000) ||
+      (selectedPrice === '100k - 500k' && item.price >= 100000 && item.price <= 500000) ||
+      (selectedPrice === 'above 500k' && item.price > 500000);
     const availabilityCondition = selectedAvailability === 'all' ||
       (selectedAvailability === 'available' && item.availability > 0) ||
       (selectedAvailability === 'out of stock' && item.availability === 0);
@@ -204,6 +204,7 @@ const Page = () => {
           <ul className='lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
             {filteredData.map((item, index) => (
               <button
+                key={item.id}
                 onClick={() => router.push(`/products/${encodeURIComponent(item.id)}`, undefined, { shallow: true })}
                 className="group relative rounded-md overflow-hidden border shadow-md hover:shadow-lg">
                 <div className="flex justify-center p-4">
@@ -215,7 +216,10 @@ const Page = () => {
                 </div>
                 <div className="p-4 mt-6 bg-white">
                   <h3 className="text-sm font-semibold text-gray-800 text-left">{item.title}</h3>
-                  <p className="mt-2 text-sm font-medium text-gray-900 text-left">Rp.{" "}{formatPrice(item.price)}</p>
+                  <div className='flex justify-between items-end'>
+                    <p className="mt-2 text-sm font-medium text-gray-900 text-left">Rp.{" "}{formatPrice(item.price)}</p>
+                    <p className='text-sm text-left text-yellow-500 font-semibold'>{item.popularity}</p>
+                  </div>
                 </div>
               </button>
             ))}
