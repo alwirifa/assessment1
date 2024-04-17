@@ -223,7 +223,7 @@ const Page = () => {
           </div>
 
           {/* Product grid */}
-          <ul className='lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
+          <ul className='lg:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8'>
             {filteredData.map((item, index) => (
               <button
                 key={index}
@@ -234,7 +234,7 @@ const Page = () => {
                   <img
                     src={item.img}
                     alt={item.title}
-                    className="object-cover object-center max-w-[200px] group-hover:opacity-75 transition duration-300 ease-in-out"
+                    className="object-cover object-center max-w-[100px] lg:max-w-[200px]  group-hover:opacity-75 transition duration-300 ease-in-out"
                   />
                 </div>
                 <div className="p-4 mt-6 bg-white">

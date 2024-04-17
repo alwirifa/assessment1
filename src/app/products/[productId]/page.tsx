@@ -28,8 +28,8 @@ export default function ProductDetails({ params }: { params: ProductParams }) {
 
       </div>
 
-      <div className='mt-16'>
-        <div className='flex justify-between'>
+      <div className='mt-16 p-4'>
+        <div className='flex flex-col gap-8 lg:flex-row justify-between'>
           <div className='flex-1 flex justify-center'>
 
             <img src={product.img} alt={product.title} className='h-auto w-[300px]' />
