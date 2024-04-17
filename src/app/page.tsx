@@ -1,26 +1,25 @@
 "use client"
 
-"use client";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
+} from '@/components/ui/accordion'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ChevronDown } from 'lucide-react';
+} from '@/components/ui/dropdown-menu'
+import { ChevronDown } from 'lucide-react'
 import data from '@/db/data';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
 const Page = () => {
+
   interface CustomRouter {
-    push(href: string, undefined: undefined, arg2: { shallow: boolean }): unknown;
+    push(href: string, undefined: undefined, arg2: { shallow: boolean; }): unknown;
     query: {
       category?: string;
       price?: string;
@@ -51,38 +50,31 @@ const Page = () => {
   const [selectedAvailability, setSelectedAvailability] = useState(urlAvailability);
   const [selectedSort, setSelectedSort] = useState(urlSort);
 
-  // State filter harga
-  const [priceFilters, setPriceFilters] = useState({
-    under1jt: true,
-    between1jtAnd2jt: true,
-    above2jt: true,
-  });
-
   // Update URL ketika state aplikasi berubah
   useEffect(() => {
     const queryParams = {
       category: selectedCategory,
       price: selectedPrice,
       availability: selectedAvailability,
-      sort: selectedSort,
+      sort: selectedSort
     };
     const href = `/?${new URLSearchParams(queryParams).toString()}`;
-    router.push(href, undefined, { shallow: true });
+    router.push(href, undefined, { shallow: true }); 
   }, [selectedCategory, selectedPrice, selectedAvailability, selectedSort]);
 
-  const categories = ['all', ...new Set(data.map((item) => item.category))];
+
+  const categories = ['all', ...new Set(data.map(item => item.category))];
+  const prices = ['all', 'under 1jt', '1jt - 1.5jt', 'above 1.5jt'];
   const availabilities = ['all', 'available', 'out of stock'];
   const sorts = ['name', 'price (lowest)', 'price (highest)', 'popularity'];
 
-  // Update logika filter harga
-  let filteredData = data.filter((item) => {
+  let filteredData = data.filter(item => {
     const categoryCondition = selectedCategory === 'all' || item.category === selectedCategory;
-    const priceCondition =
-      (priceFilters.under1jt && item.price < 1000000) ||
-      (priceFilters.between1jtAnd2jt && item.price >= 1000000 && item.price <= 2000000) ||
-      (priceFilters.above2jt && item.price > 2000000);
-    const availabilityCondition =
-      selectedAvailability === 'all' ||
+    const priceCondition = selectedPrice === 'all' ||
+      (selectedPrice === 'under 1jt' && item.price < 1000000) ||
+      (selectedPrice === '1jt - 1.5jt' && item.price >= 1000000 && item.price <= 1500000) ||
+      (selectedPrice === 'above 1.5jt' && item.price > 1500000);
+    const availabilityCondition = selectedAvailability === 'all' ||
       (selectedAvailability === 'available' && item.availability > 0) ||
       (selectedAvailability === 'out of stock' && item.availability === 0);
     return categoryCondition && priceCondition && availabilityCondition;
@@ -129,7 +121,7 @@ const Page = () => {
 
             <DropdownMenuContent align='end'>
               <ul className='flex flex-col space-y-4 p-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900 capitalize'>
-                {sorts.map((sort) => (
+                {sorts.map(sort => (
                   <span
                     key={sort}
                     style={{ color: selectedSort === sort ? 'black' : 'gray', cursor: 'pointer', marginRight: '10px' }}
@@ -141,15 +133,17 @@ const Page = () => {
               </ul>
             </DropdownMenuContent>
           </DropdownMenu>
+
         </div>
       </div>
 
       <section className='pb-24 pt-6'>
         <div className='grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4'>
+
           {/* Catergory Filters */}
           <div className='hidden lg:block'>
             <ul className='flex flex-col space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900 capitalize'>
-              {categories.map((category) => (
+              {categories.map(category => (
                 <span
                   key={category}
                   style={{ color: selectedCategory === category ? 'black' : 'gray', cursor: 'pointer', marginRight: '10px' }}
@@ -161,6 +155,7 @@ const Page = () => {
             </ul>
 
             <Accordion type='multiple' className='animate-none'>
+
               {/* Price filters */}
               <AccordionItem value='price'>
                 <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-gray-500'>
@@ -169,35 +164,18 @@ const Page = () => {
 
                 <AccordionContent className='pt-6 animate-none'>
                   <ul className='flex flex-col space-y-4 capitalize'>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={priceFilters.under1jt}
-                        onChange={() => setPriceFilters({ ...priceFilters, under1jt: !priceFilters.under1jt })}
-                      />
-                      <span>Under 1jt</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={priceFilters.between1jtAnd2jt}
-                        onChange={() => setPriceFilters({ ...priceFilters, between1jtAnd2jt: !priceFilters.between1jtAnd2jt })}
-                      />
-                      <span>1jt - 2jt</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={priceFilters.above2jt}
-                        onChange={() => setPriceFilters({ ...priceFilters, above2jt: !priceFilters.above2jt })}
-                      />
-                      <span>Above 2jt</span>
-                    </label>
-                    <button className="text-sm text-gray-500 hover:text-gray-700" onClick={() => setPriceFilters({ under1jt: false, between1jtAnd2jt: false, above2jt: false })}>Clear</button>
+                    {prices.map(price => (
+                      <span
+                        key={price}
+                        style={{ color: selectedPrice === price ? 'black' : 'gray', cursor: 'pointer', marginRight: '10px' }}
+                        onClick={() => setSelectedPrice(price)}
+                      >
+                        {price}
+                      </span>
+                    ))}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
-
 
               {/* Avaibility filter */}
               <AccordionItem value='avaibility'>
@@ -207,7 +185,7 @@ const Page = () => {
 
                 <AccordionContent className='pt-6 animate-none'>
                   <ul className='flex flex-col space-y-4 capitalize'>
-                    {availabilities.map((availability) => (
+                    {availabilities.map(availability => (
                       <span
                         key={availability}
                         style={{ color: selectedAvailability === availability ? 'black' : 'gray', cursor: 'pointer', marginRight: '10px' }}
@@ -223,18 +201,16 @@ const Page = () => {
           </div>
 
           {/* Product grid */}
-          <ul className='lg:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8'>
+          <ul className='lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
             {filteredData.map((item, index) => (
               <button
-                key={index}
                 onClick={() => router.push(`/products/${encodeURIComponent(item.id)}`, undefined, { shallow: true })}
-                className="group relative rounded-md overflow-hidden border shadow-md hover:shadow-lg"
-              >
+                className="group relative rounded-md overflow-hidden border shadow-md hover:shadow-lg">
                 <div className="flex justify-center p-4">
                   <img
                     src={item.img}
                     alt={item.title}
-                    className="object-cover object-center max-w-[100px] lg:max-w-[200px]  group-hover:opacity-75 transition duration-300 ease-in-out"
+                    className="object-cover object-center max-w-[200px] group-hover:opacity-75 transition duration-300 ease-in-out"
                   />
                 </div>
                 <div className="p-4 mt-6 bg-white">
@@ -244,10 +220,12 @@ const Page = () => {
               </button>
             ))}
           </ul>
+
         </div>
       </section>
     </main>
   );
-};
+}
 
 export default Page;
+
